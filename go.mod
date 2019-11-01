@@ -1,3 +1,3 @@
-module main
+module thevoidlives/main
 
 go 1.12

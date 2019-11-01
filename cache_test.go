@@ -2,13 +2,12 @@ package main
 
 import (
 	"fmt"
-	"sim"
 	"testing"
 )
 
 // InitTest32 tests Cache Initialization (32KB)
 func TestInit32(t *testing.T) {
-	options := &sim.Options{
+	options := &Options{
 		Size:        32768, // 32 KB
 		Assoc:       2,     // 2 way
 		BlockSize:   64,    // B
@@ -16,14 +15,14 @@ func TestInit32(t *testing.T) {
 		WriteBack:   0,     // Write back
 		Debug:       true,  // Debug Tracing
 	}
-	cache := &sim.Cache{Options: options}
+	cache := &Cache{Options: options}
 	err := cache.Init()
 	fmt.Printf("\nError: %v\n", err)
 }
 
 // InitTest64 tests Cache Initialization (64KB)
 func TestInit64(t *testing.T) {
-	options := &sim.Options{
+	options := &Options{
 		Size:        65536, // 32 KB
 		Assoc:       2,     // 2 way
 		BlockSize:   64,    // B
@@ -32,14 +31,14 @@ func TestInit64(t *testing.T) {
 		Debug:       true,  // Debug Tracing
 	}
 
-	cache := &sim.Cache{Options: options}
+	cache := &Cache{Options: options}
 	err := cache.Init()
 	fmt.Printf("\nError: %v\n", err)
 }
 
 // ParseTest32 tests the cache address parsing with a 32KB Cache
 func TestParse32(t *testing.T) {
-	options := &sim.Options{
+	options := &Options{
 		Size:        32768, // 32 KB
 		Assoc:       2,     // 2 way
 		BlockSize:   64,    // B
@@ -48,7 +47,7 @@ func TestParse32(t *testing.T) {
 		Debug:       false, // Debug Tracing
 	}
 
-	cache := &sim.Cache{Options: options}
+	cache := &Cache{Options: options}
 	err := cache.Init()
 
 	tag, set, offset, err := cache.Parse("0x62b8")
@@ -64,7 +63,7 @@ func TestParse32(t *testing.T) {
 
 // ParseTest32 tests the cache address parsing with a 32KB Cache
 func TestParseBreak32(t *testing.T) {
-	options := &sim.Options{
+	options := &Options{
 		Size:        32768, // 32 KB
 		Assoc:       2,     // 2 way
 		BlockSize:   64,    // B
@@ -73,7 +72,7 @@ func TestParseBreak32(t *testing.T) {
 		Debug:       false, // Debug Tracing
 	}
 
-	cache := &sim.Cache{Options: options}
+	cache := &Cache{Options: options}
 	err := cache.Init()
 
 	tag, set, offset, err := cache.Parse("0x62b8")
@@ -89,7 +88,7 @@ func TestParseBreak32(t *testing.T) {
 
 // ParseTest64 tests the cache address parsing with a 32KB Cache
 func TestParse64(t *testing.T) {
-	options := &sim.Options{
+	options := &Options{
 		Size:        65536, // 32 KB
 		Assoc:       2,     // 2 way
 		BlockSize:   64,    // B
@@ -98,7 +97,7 @@ func TestParse64(t *testing.T) {
 		Debug:       false, // Debug Tracing
 	}
 
-	cache := &sim.Cache{Options: options}
+	cache := &Cache{Options: options}
 	err := cache.Init()
 
 	tag, set, offset, err := cache.Parse("0x62b8")
@@ -113,7 +112,7 @@ func TestParse64(t *testing.T) {
 }
 
 func TestWriteBack32(t *testing.T) {
-	options := &sim.Options{
+	options := &Options{
 		Size:        32768, // 32 KB
 		Assoc:       2,     // 2 way
 		BlockSize:   64,    // B
@@ -122,10 +121,10 @@ func TestWriteBack32(t *testing.T) {
 		Debug:       false, // Debug Tracing
 	}
 
-	cache := &sim.Cache{Options: options}
+	cache := &Cache{Options: options}
 	_ = cache.Init()
 
-	err := cache.Execute(sim.WRITE, "0x62b8")
+	err := cache.Execute(WRITE, "0x62b8")
 	if err != nil {
 		t.Errorf("%v", err)
 	}
@@ -143,7 +142,7 @@ func TestWriteBack32(t *testing.T) {
 }
 
 func TestWriteThrough32(t *testing.T) {
-	options := &sim.Options{
+	options := &Options{
 		Size:        32768, // 32 KB
 		Assoc:       2,     // 2 way
 		BlockSize:   64,    // B
@@ -152,11 +151,11 @@ func TestWriteThrough32(t *testing.T) {
 		Debug:       false, // Debug Tracing
 	}
 
-	cache := &sim.Cache{Options: options}
+	cache := &Cache{Options: options}
 	_ = cache.Init()
 	cache.Options.Debug = true
 
-	err := cache.Execute(sim.WRITE, "0x62b8")
+	err := cache.Execute(WRITE, "0x62b8")
 	if err != nil {
 		t.Errorf("%v", err)
 	}
@@ -172,7 +171,7 @@ func TestWriteThrough32(t *testing.T) {
 		t.Errorf("Writes incorrect: %v", cache.Stats.Writes)
 	}
 
-	err = cache.Execute(sim.WRITE, "0x62b8")
+	err = cache.Execute(WRITE, "0x62b8")
 	if err != nil {
 		t.Errorf("%v", err)
 	}
@@ -188,7 +187,7 @@ func TestWriteThrough32(t *testing.T) {
 		t.Errorf("Writes incorrect: %v", cache.Stats.Writes)
 	}
 
-	err = cache.Execute(sim.READ, "0x62b8")
+	err = cache.Execute(READ, "0x62b8")
 	if err != nil {
 		t.Errorf("%v", err)
 	}
@@ -204,7 +203,7 @@ func TestWriteThrough32(t *testing.T) {
 		t.Errorf("Writes incorrect: %v", cache.Stats.Writes)
 	}
 
-	err = cache.Execute(sim.READ, "0x63b8")
+	err = cache.Execute(READ, "0x63b8")
 	if err != nil {
 		t.Errorf("%v", err)
 	}
@@ -222,7 +221,7 @@ func TestWriteThrough32(t *testing.T) {
 }
 
 func TestLRU(t *testing.T) {
-	options := &sim.Options{
+	options := &Options{
 		Size:        32768, // 32 KB
 		Assoc:       8,     // 2 way
 		BlockSize:   64,    // B
@@ -232,7 +231,7 @@ func TestLRU(t *testing.T) {
 	}
 
 	// Init
-	cache := &sim.Cache{Options: options}
+	cache := &Cache{Options: options}
 	_ = cache.Init()
 	cache.Options.Debug = true
 
@@ -251,6 +250,6 @@ func TestLRU(t *testing.T) {
 	vars = append(vars, "0x3fff6c5b7b80")
 
 	for i := range vars {
-		_ = cache.Execute(sim.WRITE, vars[i])
+		_ = cache.Execute(WRITE, vars[i])
 	}
 }
