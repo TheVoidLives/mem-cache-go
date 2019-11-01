@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"sim"
 	"strconv"
 	"strings"
 )
@@ -46,7 +45,7 @@ func main() {
 	defer file.Close()
 
 	// Options
-	options := &sim.Options{
+	options := &Options{
 		Size:        uint64(size), // Bytes
 		Assoc:       int(assoc),   // n-way
 		BlockSize:   64,           // Bytes
@@ -57,7 +56,7 @@ func main() {
 	}
 
 	// Starat Cache
-	cache := &sim.Cache{Options: options}
+	cache := &Cache{Options: options}
 	cache.Init()
 
 	// Execute loop

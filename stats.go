@@ -1,4 +1,4 @@
-package sim
+package main
 
 // Statistics represents cahce statistics
 type Statistics struct {

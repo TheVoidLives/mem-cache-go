@@ -1,2 +1,2 @@
 build:
-	go build -o SIM
+	go build -o CACHE
